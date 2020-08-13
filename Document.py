@@ -3,12 +3,12 @@ import PyPDF2
 import docx
 from gtts import gTTS
 import re
-from flask import Flask, render_template, request
+from flask import Flask, request
 from werkzeug import secure_filename
+
 app = Flask(__name__)
 
-
-def getText(file_path):
+def getTextDocs(file_path):
     if(os.path.exists(file_path)):
         pass
     else:
@@ -28,24 +28,24 @@ def getTextTxt(file_path):
         print("File does not exist")
         exit()
 
-    f = open(file_path,"r")
+    f = open(file_path, "r")
     return(f.read())
 
-def docsTxt(file_path):
+def fromTxt(file_path):
     string_words = getTextTxt(file_path)
     print(string_words)
     tts = gTTS(text=string_words, lang='en')
     tts.save("C:/Users/ranjan/Desktop/listen_pdf.mp3")
-    os.system("mpg321 C:/Users/ranjan/Desktop/listen_pdf.mp3")
+    os.system("start C:/Users/ranjan/Desktop/listen_pdf.mp3")
 
-def docs(file_path):
-    string_words = getText(file_path)
+def fromDocs(file_path):
+    string_words = getTextDocs(file_path)
     print(string_words)
-    tts = gTTS(text=string_words, lang='en', slow=True)
+    tts = gTTS(text=string_words, lang='en')
     tts.save("C:/Users/ranjan/Desktop/listen_pdf.mp3")
-    os.system("mpg321 C:/Users/ranjan/Desktop/listen_pdf.mp3")
+    os.system("start C:/Users/ranjan/Desktop/listen_pdf.mp3")
 
-def my_function(file_path):
+def fromPDF(file_path):
    
   if(os.path.exists(file_path)):
       pass
@@ -64,7 +64,6 @@ def my_function(file_path):
    
   string_words = ''
   for pageno in range(no_of_pages):
-      pi = pdffile.getPage(pageno)
       page = pdffile.getPage(pageno)
       content = page.extractText()
       textonly = re.findall(r'[a-zA-Z0-9]+', content)
@@ -73,8 +72,8 @@ def my_function(file_path):
    
   print(string_words)
   tts = gTTS(text=string_words, lang='en')
-  tts.save("C:/Users/ranjan/Desktop/listen_pdf.mp3")
-  os.system("mpg321 C:/Users/ranjan/Desktop/listen_pdf.mp3")
+  tts.save("C:/Users/amitc/Desktop/listen_pdf.mp3")
+  os.system("start C:/Users/amitc/Desktop/listen_pdf.mp3")
 
 @app.route('/')
 def upload_file():
@@ -94,11 +93,11 @@ def upload_file1():
       f.save(secure_filename(f.filename))
       ext = f.filename.split('.')
       if ext[1] == "pdf":
-        my_function(f.filename)
+        fromPDF(f.filename)
       elif ext[1] == "docx":
-        docs(f.filename)
+        fromDocs(f.filename)
       elif ext[1] == "txt":
-        docsTxt(f.filename)
+        fromTxt(f.filename)
       else:
         print('Invalid File')
       return ('file generated successfully')
