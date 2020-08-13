@@ -78,7 +78,14 @@ def my_function(file_path):
 
 @app.route('/')
 def upload_file():
-  return '<html><body> <form action = "http://localhost:5000/upload" method = "POST" enctype = "multipart/form-data"><input type = "file" name = "file" /><input type = "submit"/></form></body></html>'
+  return '<html>
+            <body>
+            <form action = "http://localhost:5000/upload" method = "POST" enctype = "multipart/form-data">
+                <input type = "file" name = "file">
+                <input type = "submit">
+            </form>
+            </body>
+          </html>'
   
 @app.route('/upload', methods = ['GET', 'POST'])
 def upload_file1():
@@ -87,7 +94,7 @@ def upload_file1():
       f.save(secure_filename(f.filename))
       ext = f.filename.split('.')
       if ext[1] == "pdf":
-        my_function(request.files['file'].filename)
+        my_function(f.filename)
       elif ext[1] == "docx":
         docs(f.filename)
       elif ext[1] == "txt":
